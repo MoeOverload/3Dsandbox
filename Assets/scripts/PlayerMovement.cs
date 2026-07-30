@@ -9,8 +9,10 @@ public class PlayerMovement : MonoBehaviour
     Vector2 moveInput;
     //set speed variable
     public float speed = 5f;
+    //rotation speed
+    public float rotationSpeed = 10f;
     //refernce to the camera
-    public Transform cameraTransform;
+    //public Transform cameraTransform;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -24,16 +26,21 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 forward = cameraTransform.forward;
-        Vector3 right = cameraTransform.right;
-        forward.y = 0;
-        right.y = 0;
+        //Vector3 forward = cameraTransform.forward;
+        //Vector3 right = cameraTransform.right;
+        //forward.y = 0;
+        //right.y = 0;
 
-        Vector3 movement = forward * moveInput.y + right *moveInput.x;
+        Vector3 movement = new Vector3(moveInput.x,0,moveInput.y);
         movement.Normalize();
         if (movement != Vector3.zero)
         {
-            transform.forward = movement;
+            Quaternion targetRotaion = Quaternion.LookRotation(movement);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotaion,
+                rotationSpeed * Time.deltaTime
+            );
         }
         controller.Move(movement * speed * Time.deltaTime);
     }
