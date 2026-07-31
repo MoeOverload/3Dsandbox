@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
     //get refernce to the character controller
     CharacterController controller;
     PlayerControls  controls;
+    //ref the animator
+    Animator animator;
     Vector2 moveInput;
     //set speed variable
     public float speed = 5f;
@@ -21,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
         controls = new PlayerControls();
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -43,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
             );
         }
         controller.Move(movement * speed * Time.deltaTime);
+        animator.SetFloat("Speed",movement.magnitude);
     }
 
     void OnEnable()
